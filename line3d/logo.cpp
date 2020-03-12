@@ -90,22 +90,34 @@ void Logo::add(const QVector3D &v, const QVector3D &n)
     m_count += 6;
 }
 
-void Logo::quad(const GLfloat (*tab)[3], int length) //Idée possible faire des fonctions distinctes pour reliers tous les points d'un tableau ensemble
-                                                     // ou les un après les autres comme ça plus simple pour dessiner forme 3d
+void Logo::draw_every(const GLfloat (*tab)[3], int length)
 {
     QVector3D n = QVector3D::normal(QVector3D(0, 0, 0), QVector3D(0, 0, 0));
 
-//    for(int i = 0; i < length; i++){ // Relis tous les points ensembles
-//        for(int j = i; j < length; j++){
-//            add(QVector3D(tab[i][0], tab[i][1], tab[i][2]), n); // Toujours faire par paire (Fais un trait en le point 1 et 2)
-//            add(QVector3D(tab[j][0], tab[j][1], tab[j][2]), n);
-//        }
-//    }
+    for(int i = 0; i < length; i++){ // Relis tous les points ensembles
+        for(int j = i; j < length; j++){
+            add(QVector3D(tab[i][0], tab[i][1], tab[i][2]), n); // Toujours faire par paire (Fais un trait en le point 1 et 2)
+            add(QVector3D(tab[j][0], tab[j][1], tab[j][2]), n);
+        }
+    }
+}
+
+void Logo::draw_order(const GLfloat (*tab)[3], int length, bool backtostart)
+{
+    QVector3D n = QVector3D::normal(QVector3D(0, 0, 0), QVector3D(0, 0, 0));
 
     for(int i = 0; i < length-1; i++){ // Relis les points par ordre d'apparition
         add(QVector3D(tab[i][0], tab[i][1], tab[i][2]), n); // Toujours faire par paire (Fais un trait en le point 1 et 2)
         add(QVector3D(tab[i+1][0], tab[i+1][1], tab[i+1][2]), n);
     }
+    if(backtostart){
     add(QVector3D(tab[length-1][0], tab[length-1][1], tab[length-1][2]), n);
     add(QVector3D(tab[0][0], tab[0][1], tab[0][2]), n);
+    }
+}
+
+void Logo::quad(const GLfloat (*tab)[3], int length) //Idée possible faire des fonctions distinctes pour reliers tous les points d'un tableau ensemble
+                                                     // ou les un après les autres comme ça plus simple pour dessiner forme 3d
+{
+    draw_order(tab,length,0);
 }

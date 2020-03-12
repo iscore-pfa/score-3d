@@ -71,8 +71,6 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
-private slots:
-    void dockUndock();
 
 private:
     QSlider *createSlider();
@@ -81,7 +79,6 @@ private:
     QSlider *xSlider;
     QSlider *ySlider;
     QSlider *zSlider;
-    QPushButton *dockBtn;
     MainWindow *mainWindow;
 };
 

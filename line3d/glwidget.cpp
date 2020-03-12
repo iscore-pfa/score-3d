@@ -61,7 +61,8 @@ GLWidget::GLWidget(QWidget *parent)
       m_xRot(0),
       m_yRot(0),
       m_zRot(0),
-      m_program(0)
+      m_program(0),
+      Camera_zoom(QVector3D(0,0,-1))
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
     // --transparent causes the clear color to be transparent. Therefore, on systems that
@@ -240,7 +241,6 @@ void GLWidget::initializeGL()
 
     // Light position is fixed.
     m_program->setUniformValue(m_lightPosLoc, QVector3D(0, 0, 70));
-
     m_program->release();
 }
 
@@ -303,3 +303,20 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
     m_lastPos = event->pos();
 }
+
+void GLWidget::wheelEvent(QWheelEvent *event)
+{
+    QPoint numDegrees = event->angleDelta() / 8;
+    if(numDegrees.y()>0&&(int(Camera_zoom.z())<-1)){
+        Camera_zoom.setZ(int(Camera_zoom.z())+1);
+    }else if(numDegrees.y()<0){
+        Camera_zoom.setZ(int(Camera_zoom.z())-1);
+    }
+    m_camera.setToIdentity();
+    m_camera.translate(Camera_zoom);
+    m_program->setUniformValue(m_mvMatrixLoc, m_camera * m_world);
+    m_program->release();
+    update();
+
+}
+

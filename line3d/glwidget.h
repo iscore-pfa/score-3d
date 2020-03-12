@@ -91,6 +91,7 @@ protected:
     void resizeGL(int width, int height) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     void setupVertexAttribs();
@@ -111,6 +112,7 @@ private:
     QMatrix4x4 m_proj;
     QMatrix4x4 m_camera;
     QMatrix4x4 m_world;
+    QVector3D Camera_zoom;
     static bool m_transparent;
 };
 

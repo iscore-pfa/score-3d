@@ -59,9 +59,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
-
-private slots:
-    void onAddNew();
 };
 
 #endif

@@ -66,6 +66,8 @@ public:
 private:
     void quad(const GLfloat (*tab)[3], int length);
     void add(const QVector3D &v, const QVector3D &n);
+    void draw_every(const GLfloat (*tab)[3], int length);
+    void draw_order(const GLfloat (*tab)[3], int length, bool backtostart);
 
     QVector<GLfloat> m_data;
     int m_count;
