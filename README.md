@@ -1,1 +1,2 @@
 # score-3d
+Ce dossier contient les fichiers issus de notre recherche afin de générer une fenêtre afin d'afficher les trajectoires 3D. Il s'agit d'un projet Qt nous permettant de générer un carré dans une fenêtre 3D. Nous pouvons observer cette trajectoire grâce aux diverses rotations, mais aussi de pouvoir zoomer ou dézoomer afin de mieux voir notre trajectoire. De plus actuellement cette fenêtre contient un bouton afin de modifier la couleur de la trajectoire, ce qui pourra nous être utile dans le futur afin d'afficher l'évolution de la trajectoire au cours du temps.
