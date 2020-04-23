@@ -71,6 +71,8 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
+private slots:
+    void colorChange();
 
 private:
     QSlider *createSlider();
@@ -79,6 +81,7 @@ private:
     QSlider *xSlider;
     QSlider *ySlider;
     QSlider *zSlider;
+    QPushButton *colorBtn;
     MainWindow *mainWindow;
 };
 

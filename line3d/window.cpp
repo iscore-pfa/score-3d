@@ -64,11 +64,9 @@ Window::Window(MainWindow *mw)
     : mainWindow(mw)
 {
     glWidget = new GLWidget;
-
     xSlider = createSlider();
     ySlider = createSlider();
     zSlider = createSlider();
-
     connect(xSlider, &QSlider::valueChanged, glWidget, &GLWidget::setXRotation);
     connect(glWidget, &GLWidget::xRotationChanged, xSlider, &QSlider::setValue);
     connect(ySlider, &QSlider::valueChanged, glWidget, &GLWidget::setYRotation);
@@ -86,6 +84,9 @@ Window::Window(MainWindow *mw)
     QWidget *w = new QWidget;
     w->setLayout(container);
     mainLayout->addWidget(w);
+    colorBtn = new QPushButton(tr("Change color"), this);
+    connect(colorBtn, &QPushButton::clicked, this, &Window::colorChange);
+    mainLayout->addWidget(colorBtn);
 
     setLayout(mainLayout);
 
@@ -112,4 +113,9 @@ void Window::keyPressEvent(QKeyEvent *e)
         close();
     else
         QWidget::keyPressEvent(e);
+}
+
+void Window::colorChange()
+{
+    glWidget->colorChange();
 }

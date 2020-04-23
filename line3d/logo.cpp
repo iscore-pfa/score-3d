@@ -119,5 +119,5 @@ void Logo::draw_order(const GLfloat (*tab)[3], int length, bool backtostart)
 void Logo::quad(const GLfloat (*tab)[3], int length) //Idée possible faire des fonctions distinctes pour reliers tous les points d'un tableau ensemble
                                                      // ou les un après les autres comme ça plus simple pour dessiner forme 3d
 {
-    draw_order(tab,length,0);
+    draw_order(tab,length,1);
 }

@@ -74,11 +74,14 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
+    void changeColor();
+
 public slots:
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
     void cleanup();
+    void colorChange();
 
 signals:
     void xRotationChanged(int angle);
@@ -93,6 +96,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
+
+
 private:
     void setupVertexAttribs();
 
@@ -100,6 +105,7 @@ private:
     int m_xRot;
     int m_yRot;
     int m_zRot;
+
     QPoint m_lastPos;
     Logo m_logo;
     QOpenGLVertexArrayObject m_vao;
@@ -112,8 +118,10 @@ private:
     QMatrix4x4 m_proj;
     QMatrix4x4 m_camera;
     QMatrix4x4 m_world;
-    QVector3D Camera_zoom;
+
     static bool m_transparent;
+    int color;
+    QVector3D Camera_zoom;
 };
 
 #endif

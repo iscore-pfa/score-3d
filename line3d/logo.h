@@ -59,13 +59,14 @@ class Logo
 {
 public:
     Logo();
+    GLfloat tab[4][3];
     const GLfloat *constData() const { return m_data.constData(); }
     int count() const { return m_count; }
     int vertexCount() const { return m_count / 6; }
 
 private:
-    void quad(const GLfloat (*tab)[3], int length);
     void add(const QVector3D &v, const QVector3D &n);
+    void quad(const GLfloat (*tab)[3], int length);
     void draw_every(const GLfloat (*tab)[3], int length);
     void draw_order(const GLfloat (*tab)[3], int length, bool backtostart);
 

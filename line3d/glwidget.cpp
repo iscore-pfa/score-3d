@@ -49,11 +49,12 @@
 ****************************************************************************/
 
 #include "glwidget.h"
+
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
 #include <math.h>
-
+#include <iostream>
 bool GLWidget::m_transparent = false;
 
 GLWidget::GLWidget(QWidget *parent)
@@ -62,6 +63,7 @@ GLWidget::GLWidget(QWidget *parent)
       m_yRot(0),
       m_zRot(0),
       m_program(0),
+      color(0),
       Camera_zoom(QVector3D(0,0,-1))
 {
     m_core = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
@@ -164,7 +166,7 @@ static const char *fragmentShaderSourceCore =
     "   highp float NL = max(dot(normalize(vertNormal), L), 0.0);\n"
     "   highp vec3 color = vec3(0.39, 1.0, 0.0);\n"
     "   highp vec3 col = clamp(color * 0.2 + color * 0.8 * NL, 0.0, 1.0);\n"
-    "   fragColor = vec4(1.0,1.0,1.0, 1.0);\n"
+    "   fragColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
     "}\n";
 
 static const char *vertexShaderSource =
@@ -181,7 +183,7 @@ static const char *vertexShaderSource =
     "   gl_Position = projMatrix * mvMatrix * vertex;\n"
     "}\n";
 
-static const char *fragmentShaderSource =
+static const char *fragmentShaderSource_color_0 =
     "varying highp vec3 vert;\n"
     "varying highp vec3 vertNormal;\n"
     "uniform highp vec3 lightPos;\n"
@@ -190,8 +192,33 @@ static const char *fragmentShaderSource =
     "   highp float NL = max(dot(normalize(vertNormal), L), 0.0);\n"
     "   highp vec3 color = vec3(1.0, 0.75, 0);\n"
     "   highp vec3 col = clamp(color * 0.2 + color * 0.8 * NL, 0.0, 1.0);\n"
-    "   gl_FragColor = vec4(1.0,1.0,1.0, 1.0);\n" //C'est ici pour changer la couleur de la forme
+    "   gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" //C'est ici pour changer la couleur de la forme
     "}\n";
+
+static const char *fragmentShaderSource_color_1 =
+    "varying highp vec3 vert;\n"
+    "varying highp vec3 vertNormal;\n"
+    "uniform highp vec3 lightPos;\n"
+    "void main() {\n"
+    "   highp vec3 L = normalize(lightPos - vert);\n"
+    "   highp float NL = max(dot(normalize(vertNormal), L), 0.0);\n"
+    "   highp vec3 color = vec3(1.0, 0.75, 0);\n"
+    "   highp vec3 col = clamp(color * 0.2 + color * 0.8 * NL, 0.0, 1.0);\n"
+    "   gl_FragColor = vec4(0.97, 1.0, 0.0, 0.23);\n" //C'est ici pour changer la couleur de la forme
+    "}\n";
+
+void GLWidget::colorChange()
+{
+    m_program->removeShader((m_program->shaders())[1]);
+    if(color==0){
+        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, m_core ? fragmentShaderSourceCore : fragmentShaderSource_color_1);
+    }else{
+        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, m_core ? fragmentShaderSourceCore : fragmentShaderSource_color_0);
+    }
+    color=(color+1)%2;
+    update();
+}
+
 
 void GLWidget::initializeGL()
 {
@@ -206,10 +233,9 @@ void GLWidget::initializeGL()
 
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
-
     m_program = new QOpenGLShaderProgram;
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, m_core ? vertexShaderSourceCore : vertexShaderSource);
-    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, m_core ? fragmentShaderSourceCore : fragmentShaderSource);
+    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, m_core ? fragmentShaderSourceCore : fragmentShaderSource_color_0);
     m_program->bindAttributeLocation("vertex", 0);
     m_program->bindAttributeLocation("normal", 1);
     m_program->link();
@@ -274,7 +300,6 @@ void GLWidget::paintGL()
     m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
 
     glDrawArrays(GL_LINES, 0, m_logo.vertexCount());
-
     m_program->release();
 }
 
